@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const { renderChart } = require('./lib/render');
 
 // Constants
@@ -9,13 +10,39 @@ const HOST = '0.0.0.0';
 
 const app = express();
 
+// create application/json parser
+const jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
+
 app.get('/', (req, res) => {
     res.send('Hello World from Docker');
 });
 
-app.get('/chart', (req, res, next) => {
+app.post('/chart', jsonParser, (req, res, next) => {
     try {
-        let svgStr = renderChart();
+        /* const demoObj = {
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            },
+            yAxis: {
+                type: 'value',
+            },
+            series: [
+                {
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'bar',
+                    animationDelay: (idx) => {
+                        return idx * 100;
+                    },
+                },
+            ],
+        };
+        const opts = JSON.stringify(demoObj); */
+        let opts = req.body.options;
+        let svgStr = renderChart(400, 300, JSON.parse(opts));
         res.writeHead(200, {
             'Content-Type': 'application/xml',
         });
