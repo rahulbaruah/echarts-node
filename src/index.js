@@ -17,7 +17,7 @@ const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get('/', (req, res) => {
-    res.send('Hello World from Docker');
+    res.send('Echarts Server Running...');
 });
 
 app.post('/chart', jsonParser, (req, res, next) => {
